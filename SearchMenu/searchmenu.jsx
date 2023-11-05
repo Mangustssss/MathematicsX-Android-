@@ -5,6 +5,8 @@ import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { SearchBar } from 'react-native-elements';
 import MenuScreen from '../Components/MenuScreen';
+import { NavigationContainer } from '@react-navigation/native';
+// import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -61,9 +63,9 @@ const styles = StyleSheet.create({
     },
     header: {
         flex: 1,
-        fontSize: 40,
-        fontFamily: 'poppins-mid',
-        top: 60,
+        fontSize: 50,
+        fontFamily: 'poppins-bold',
+        top: '8%',
         alignItems: 'flex-start',
         color: '#FF5733',
     },

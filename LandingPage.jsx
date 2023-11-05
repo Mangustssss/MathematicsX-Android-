@@ -4,10 +4,9 @@ import { StatusBar } from 'expo-status-bar';
 
 const LandingPage = ({ navigation }) => {
   useEffect(() => {
-    // Navigate to the main page after a 2-second delay (adjust as needed)
     setTimeout(() => {
       navigation.navigate('SearchMenu');
-    }, 1000);
+    }, 500);
   }, []);
 
   return (

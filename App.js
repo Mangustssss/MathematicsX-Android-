@@ -7,6 +7,7 @@ import LandingPage from './LandingPage';
 import 'react-native-gesture-handler';
 const Stack = createStackNavigator();
 import { useFonts } from 'expo-font';
+import Equation1Theory from './Quadratic/Equation1Theory';
 
 
 
@@ -18,6 +19,7 @@ export default function App() {
       }}>
         <Stack.Screen name="LandingPage" component={LandingPage} />
         <Stack.Screen name="SearchMenu" component={SearchMenu} />
+        <Stack.Screen name="Equation1Theory" component={Equation1Theory} />
       </Stack.Navigator>
     </NavigationContainer>
   );
