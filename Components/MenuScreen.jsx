@@ -13,27 +13,27 @@ const MenuScreen = () => {
   const handleMenuItemPress = (itemID) => {
       navigation.navigate('Equation1Theory')
   }
-
+  
   const menuItems = [
-    { id: '1', image: require('../assets/equation1.png') },
-    { id: '2', image: require('../assets/equation1.png') },
-    { id: '3', image: require('../assets/equation1.png') },
-    { id: '4', image: require('../assets/equation1.png') },
-    { id: '5', image: require('../assets/equation1.png') },
-    { id: '6', image: require('../assets/equation1.png') },
-    { id: '7', image: require('../assets/equation1.png') },
-    { id: '8', image: require('../assets/equation1.png') },
-    { id: '9', image: require('../assets/equation1.png') },
-    { id: '10', image: require('../assets/equation1.png') },
-    { id: '11', image: require('../assets/equation1.png') },
-    { id: '12', image: require('../assets/equation1.png') },
+    { id: '1', image: require('../assets/Equations/equation1.png'), customStyle: { width: 60, height: 60}},
+    { id: '2', image: require('../assets/Equations/equation2.png') },
+    { id: '3', image: require('../assets/Equations/equation3.png') },
+    { id: '4', image: require('../assets/Equations/equation4.png') },
+    { id: '5', image: require('../assets/Equations/equation5.png') },
+    { id: '6', image: require('../assets/Equations/equation6.png') },
+    { id: '7', image: require('../assets/Equations/equation7.png') },
+    { id: '8', image: require('../assets/Equations/equation8.png') },
+    { id: '9', image: require('../assets/Equations/equation9.png') },
+    { id: '10', image: require('../assets/Equations/equation10.png') },
+    { id: '11', image: require('../assets/Equations/equation11.png') },
+    { id: '12', image: require('../assets/Equations/equation12.png') },
   ];
 
 
   const renderItem = ({ item }) => (
     <TouchableOpacity onPress={() => handleMenuItemPress(item.id)}>
       <View style={styles.menuItem}>
-        <Image source={item.image} style={StyleSheet.menuItemImage} />
+        <Image source={item.image} style={[styles.menuItemImage, item.customImageStyle]} />
       </View>
     </TouchableOpacity>
     
@@ -72,8 +72,8 @@ const styles = StyleSheet.create({
     marginBottom: 20
   },
   menuItemImage: {
-    width: 100,
-    height: 100,
+    width: 50,
+    // height: 50,
     resizeMode: 'contain',
   },
 });

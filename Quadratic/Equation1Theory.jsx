@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react'
-import { StyleSheet, Image, Text, View, Button } from 'react-native'
+import { StyleSheet, Image, Text, View, Button, Modal } from 'react-native'
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -16,6 +16,12 @@ export default function Equation1Theory() {
         "poppins-bold": require("../assets/fonts/Poppins-Bold.ttf"),
         "poppins-italic": require("../assets/fonts/Poppins-Italic.ttf"),
     })
+
+    const [isModalVisible, setModalVisible] = useState(false);
+
+    const toggleModal = () => {
+      setModalVisible(!isModalVisible);
+    };
 
 
     
@@ -47,26 +53,23 @@ export default function Equation1Theory() {
             the speed of an object, the profit and loss of a product, or curving 
             a piece of equipment for designing
             </Text>
-            
-            {/* <TouchableOpacity 
-              style={styles.button}
-              onPress={() => {
-                  navigation.navigate('SearchMenu')
-              }}
-            >
-              <Text style={styles.buttonText}>Train now</Text>
-            </TouchableOpacity> */}
             <TouchableOpacity
-              onPress={() => {
-                navigation.navigate('SearchMenu')
-              }}
               style={styles.MainBtn}
-
+              onPress={() => {
+                navigation.navigate('Equat1Task')
+              }}
             >
               <Text
                 style={styles.buttonText}
               >Train now</Text>
             </TouchableOpacity>
+            {/* <Button 
+            title='home'
+            onPress={() => {
+              navigation.navigate('SearchMenu')
+            }}
+            
+            /> */}
 
 
 

@@ -1,20 +1,19 @@
 import React, { useState, useCallback } from 'react'
 import { StyleSheet, Image, Text, View, Button } from 'react-native'
-// import { SearchBar } from 'react-native-elements'
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { SearchBar } from 'react-native-elements';
 import MenuScreen from '../Components/MenuScreen';
-import { NavigationContainer } from '@react-navigation/native';
-// import { createNativeStackNavigator } from '@react-navigation/native-stack';
-
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 SplashScreen.preventAutoHideAsync();
 
-// const appText = () => {
-//     const [titleText] = useState("Training")
-// };
+
 
 export default function SearchMenu() {
+
+    const navigation = useNavigation();
+
     const [isLoaded] = useFonts({
         "poppins-mid": require("../assets/fonts/Poppins-Black.ttf"),
         "poppins-bold": require("../assets/fonts/Poppins-Bold.ttf"),
@@ -23,7 +22,7 @@ export default function SearchMenu() {
     
     const handleOnLayout = useCallback(async () => {
         if (isLoaded) {
-          await SplashScreen.hideAsync(); //hide the splashscreen
+          await SplashScreen.hideAsync();
         }
       }, [isLoaded]);
     
@@ -44,6 +43,7 @@ export default function SearchMenu() {
                     placeholder='Search for equations'
                     onChangeText={this.updateSearch}
                     round='true'
+                    containerStyle="transparent"
                 />
                 <MenuScreen />
             </View>
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     },
     searchbar: {
         backgroundColor: 'transparent'
-    }
+    },
 
 
   
