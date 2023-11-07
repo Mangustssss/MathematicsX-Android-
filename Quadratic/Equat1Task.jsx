@@ -14,12 +14,16 @@ export default function Equat1Task() {
     
     const [equation, setEquation] = useState('');
     const [discriminant, setDiscriminant] = useState(0);
+    const [root1, setRoot1] = useState(0)
+    const [root2, setRoot2] = useState(0)
 
     const fetchQuadraticFunction = async () => {
       try {
         const response = await axios.get('http://192.168.8.190:8000/api/calculate_roots/');
         setEquation(response.data.equation);
         setDiscriminant(response.data.discriminant);
+        setRoot1(response.data.root1)
+        setRoot2(response.data.root2)
         // setMessage('');
         // setUserInput('');
       } catch (error) {
@@ -72,7 +76,7 @@ export default function Equat1Task() {
 
     const sounds = {
       victorySound: require('../assets/victoryhorns.mp3'),
-      failureSound: require('../assets/victoryhorns.mp3'),
+      failureSound: require('../assets/errorhorns.mp3'),
     };
     
     const [victorySound, setVictorySound] = useState(null);
@@ -119,9 +123,9 @@ export default function Equat1Task() {
             <Text style={styles.equation}>
               {equation}
             </Text>
-            {discriminant !== null && (
+            {/* {discriminant !== null && (
               <Text style={styles.discriminantText}>Discriminant: {discriminant}</Text>
-            )}
+            )} */}
             <View
               style={styles.diskContainer}
             >

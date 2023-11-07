@@ -1,6 +1,5 @@
 from django.http import JsonResponse
 import random
-import cmath
 
 def calculate_roots(request):
     while True:
