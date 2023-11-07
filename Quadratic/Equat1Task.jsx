@@ -7,34 +7,32 @@ import { NavigationContainer, useNavigation, useNavigationContainerRef } from '@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import axios from 'axios';
 import { useEffect } from 'react';
+import { Audio } from 'expo-av';
 
 
 export default function Equat1Task() {
+    
+    const [equation, setEquation] = useState('');
+    const [discriminant, setDiscriminant] = useState(0);
 
-    // Axios (Endpoint)
-
-    const [risin1, setRisin1] = useState(null);
-    const [risin2, setRisin2] = useState(null);
-    // const [equation, setEquation] = useState(null);
-    // const [results, setResults] = useState(null)
+    const fetchQuadraticFunction = async () => {
+      try {
+        const response = await axios.get('http://192.168.8.190:8000/api/calculate_roots/');
+        setEquation(response.data.equation);
+        setDiscriminant(response.data.discriminant);
+        // setMessage('');
+        // setUserInput('');
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
 
     useEffect(() => {
-      fetchData();
+      fetchQuadraticFunction();
     }, []);
 
-    const fetchData = async () => {
-      try{
-        const response = await axios.get('http://192.168.8.190:8000/api/quadratic-results/')
-        const data = response.data;
 
-        setRisin1(data.risin1);
-        setRisin2(data.risin2);
-        // setEquation(data.equation);
-      } catch (error) {
-        console.error('Error fetching data:', error)
-      }
-    }
 
     const navigation = useNavigation();
 
@@ -44,13 +42,68 @@ export default function Equat1Task() {
         "poppins-italic": require("../assets/fonts/Poppins-Italic.ttf"),
     })
 
+    const [userInput, setUserInput] = useState('');
     const [isModalVisible, setModalVisible] = useState(false);
+    const [modalMessage, setModalMessage] = useState('');
 
-    const toggleModal = () => {
-      setModalVisible(!isModalVisible);
+    const checkDiscriminant = () => {
+      if (userInput === discriminant.toString()) {
+        setModalMessage('Correct discriminant! You solved it.');
+        setModalVisible(true); 
+        playSound(victorySound);
+
+        setTimeout(() => {
+          setModalVisible(false);
+          navigation.navigate("SearchMenu"); 
+        }, 3500); 
+      } else {
+        setModalMessage('Incorrect discriminant. Try again.');
+        setModalVisible(true); 
+        playSound(failureSound);
+
+        setTimeout(() => {
+          setModalVisible(false);
+          navigation.navigate("SearchMenu"); 
+        }, 3000); 
+      }
     };
 
+    // Audio
 
+    const sounds = {
+      victorySound: require('../assets/victoryhorns.mp3'),
+      failureSound: require('../assets/victoryhorns.mp3'),
+    };
+    
+    const [victorySound, setVictorySound] = useState(null);
+    const [failureSound, setFailureSound] = useState(null);
+    
+    async function loadSounds() {
+      try {
+        const victory = new Audio.Sound();
+        await victory.loadAsync(sounds.victorySound);
+        setVictorySound(victory);
+    
+        const failure = new Audio.Sound();
+        await failure.loadAsync(sounds.failureSound);
+        setFailureSound(failure);
+      } catch (error) {
+        console.error('Error loading sounds:', error);
+      }
+    }
+  
+    useEffect(() => {
+      loadSounds();
+    }, []);
+    
+    async function playSound(sound) {
+      try {
+        await sound.playAsync();
+      } catch (error) {
+        console.error('Error playing sound:', error);
+      }
+    }
+    
     
     const handleOnLayout = useCallback(async () => {
         if (isLoaded) {
@@ -64,20 +117,22 @@ export default function Equat1Task() {
     return (
         <View style={styles.taskContainer}>
             <Text style={styles.equation}>
-                {/* {equation} */}
+              {equation}
             </Text>
-            <Text style={styles.risin1}>
-              {risin1}
-            </Text>
+            {discriminant !== null && (
+              <Text style={styles.discriminantText}>Discriminant: {discriminant}</Text>
+            )}
             <View
               style={styles.diskContainer}
             >
               <Text style={styles.diskLabel}>Input the correct discriminant</Text>
               <TextInput
                 placeholderTextColor="#fff" 
+                value={userInput}
                 style={styles.diskInput}
-                placeholder='Discriminant'>
-
+                placeholder='Discriminant'
+                onChangeText={(text) => setUserInput(text)}
+                >
               </TextInput>
             </View>
             <View 
@@ -87,43 +142,55 @@ export default function Equat1Task() {
               <TextInput
                 placeholderTextColor="#fff" 
                 style={styles.rootInput}
-                placeholder='x1'>
+                placeholder='Root 1'>
 
               </TextInput>
               <TextInput
                 placeholderTextColor="#fff" 
                 style={styles.rootInput}
-                placeholder='x2'>
+                placeholder='Root 2'>
 
               </TextInput>
-
             </View>
 
 
-
-
-            {/* End */}
-            <TouchableOpacity style={styles.submitBtn} onPress={toggleModal}>
+            <TouchableOpacity style={styles.submitBtn} onPress={() => {
+              checkDiscriminant();
+            }}>
                 <Text>Submit</Text>
             </TouchableOpacity>
+            {isModalVisible && (
             <Modal
-                visible={isModalVisible}
-                animationType="slide"
-                transparent={true}
+              visible={isModalVisible}
+              animationType="slide"
+              transparent={true}
             >
-                <View style={styles.modalContainer}>
+              <View style={styles.modalContainer}>
                 <View style={styles.modalContent}>
-                    <Text style={styles.paragraph}>You've correctly completed this exercise.</Text>
-                    <Text style={styles.paragraph}>You've earned 0.05 BotCoin.</Text>
-                    
-
-                    <Button style={styles.homeBtn} title="Return to the menu" 
+                  <Text style={styles.paragraph}>{modalMessage}</Text>
+                  {userInput === discriminant.toString() && (
+                    <>
+                      <Text style={styles.paragraph}>You've earned 0.05 BotCoin.</Text>
+                      <Image
+                        source={require("../assets/BotCoin.jpg")}
+                        style={styles.BotCoinImg}
+                      />
+                    </>
+                  )}
+                  <TouchableOpacity
+                    style={styles.homeBtn}
+                    title="Returning to the menu"
                     onPress={() => {
-                        navigation.navigate("SearchMenu")
-                    }} />
+                      setModalVisible(false);
+                      navigation.navigate("SearchMenu");
+                    }}
+                  >
+                    <Text style={styles.homeBtnText}>Returning to the menu...</Text>
+                  </TouchableOpacity>
                 </View>
-                </View>
+              </View>
             </Modal>
+          )}
         </View>
     )
 }
@@ -139,8 +206,22 @@ const styles = StyleSheet.create({
         height: '100%',
       },
       equation: {
-        marginTop: 50,
-        color: "white"
+        marginTop: '20%',
+        color: "white",
+        fontFamily: 'poppins-bold',
+        fontSize: 40,
+        color: '#FF5733', 
+      },
+      message: {
+        fontSize: 14,
+        marginBottom: 10,
+      },
+      equationText: {
+        fontSize: 20,
+        marginBottom: 20,
+      },
+      discriminantText: {
+        fontSize: 16,
       },
       submitBtn: {
         marginTop: 20,
@@ -177,14 +258,25 @@ const styles = StyleSheet.create({
         borderBottomRightRadius: 60,
         borderTopRightRadius: 60,
         borderTopLeftRadius: 60,
-        padding: 20,
+        margin: 20,
       },
       homeBtn: {
         borderBottomLeftRadius: 20,
         borderBottomRightRadius: 20,
         borderTopRightRadius: 20,
         borderTopLeftRadius: 20,
-        backgroundColor: "white",
+        backgroundColor: 'black',
+        width: 250,
+        height: 40,
+        alignContent: 'center',
+        margin: 10,
+      },
+      homeBtnText: {
+        top: '15%',
+        fontSize: 20,
+        fontFamily: 'poppins-bold',
+        color: 'white',
+        textAlign: 'center',
       },
       paragraph: {
         fontSize: 20,
@@ -202,13 +294,13 @@ const styles = StyleSheet.create({
         flexWrap: 'wrap',
       },
       rootLabel: {
-        fontSize: 30,
+        fontSize: 25,
         width: '90%',
         flexWrap: 'wrap',
         textAlign: 'center',
         color: 'white',
         fontFamily: 'poppins-bold',
-        color: '#FF5733',
+        color: '#fff',
       },  
       rootInput: {
         fontFamily: 'poppins-bold',
@@ -232,19 +324,19 @@ const styles = StyleSheet.create({
         flexWrap: 'wrap',
       },
       diskLabel: {
-        fontSize: 30,
+        fontSize: 25,
         width: '90%',
         flexWrap: 'wrap',
         textAlign: 'center',
         color: 'white',
         fontFamily: 'poppins-bold',
-        color: '#FF5733',
+        color: '#fff',
       },  
       diskInput: {
         fontFamily: 'poppins-bold',
         textAlign: 'center',
         borderWidth: 1,
-        width: 120,
+        width: 180,
         height: 50,
         borderBottomLeftRadius: 20,
         borderBottomRightRadius: 20,

@@ -1,7 +1,6 @@
 from django.urls import path
-from . import views
-from .views import quadratic_results
+from .views import calculate_roots
 
 urlpatterns = [
-    path('quadratic-results/', quadratic_results, name='quadratic_results'),
+    path('calculate_roots/', calculate_roots, name='calculate_roots'),
 ]

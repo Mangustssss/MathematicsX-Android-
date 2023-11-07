@@ -1,19 +1,20 @@
 from django.http import JsonResponse
-from QuadraticFormula import generate_quad_function
+import random
+import cmath
 
+def calculate_roots(request):
+    while True:
+        aint = random.randint(1, 10)
+        bint = random.randint(-10, 10)
+        cint = random.randint(-10, 10)
+        discriminant = bint**2 - 4*aint*cint
 
+        if discriminant >= 0:
+            break 
 
-def quadratic_results(request):
-    risin1 = 42
-    risin2 = 24
-    # risin1, risin2 = generate_quad_function()
-
-
-    data = {
-        'risin1': risin1,
-        'risin2': risin2,
-
-
+    response_data = {
+        'equation': f"{aint}x^2 {'+' if bint >= 0 else '-'} {abs(bint)}x {'+' if cint >= 0 else '-'} {abs(cint)} = 0",
+        'discriminant': discriminant
     }
 
-    return JsonResponse(data)
+    return JsonResponse(response_data)
